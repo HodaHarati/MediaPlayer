@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".controller.MusicListFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycler"/>
+
+    <FrameLayout
+        android:id="@+id/framelayout_sheet_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        android:background="#464242"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="100dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_sheet_detail_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/textview_title_bottemsheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/imageButton_pause"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:gravity="center"/>
+
+            <ImageButton
+                android:id="@+id/imageButton_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/seekbar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/image_previous"
+                app:layout_constraintRight_toLeftOf="@id/image_next"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_action_pause"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/image_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/seekbar"
+                app:layout_constraintLeft_toRightOf="@id/imageButton_pause"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_media_next" />
+
+
+            <ImageView
+                android:id="@+id/image_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="61dp"
+                android:layout_marginLeft="61dp"
+                app:layout_constraintBottom_toTopOf="@id/seekbar"
+                app:layout_constraintRight_toLeftOf="@id/imageButton_pause"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/ic_media_previous" />
+
+            <ImageView
+                android:id="@+id/icon_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toLeftOf="@id/image_previous"
+                android:src="@drawable/ic_action_repeat"
+                tools:ignore="MissingConstraints" />
+
+
+            <SeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageButton_pause"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
