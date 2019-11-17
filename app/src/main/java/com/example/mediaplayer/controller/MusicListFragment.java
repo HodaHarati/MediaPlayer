@@ -18,7 +18,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,14 +60,11 @@ public class MusicListFragment extends Fragment {
     private BitBox mBitBox;
 
     private SeekBar mseekbar;
-    private ImageView mImgNext;
-    private ImageView mImgPreviouse;
+    private ImageView mImgNext, mImgPreviouse, mImgRepeat, mShufel, mEqulizer, mImgCover;
     private ImageButton mImgPause;
-    private ImageView mImgRepeat;
     private TextView mTxtMusicName;
    // private TextView mTxtArtistName;
-    private ImageView mEqulizer;
-    private ImageView mImgCover;
+
 
 
    // private TextView mTextViewSongTitleBottemsheet;
@@ -81,7 +77,7 @@ public class MusicListFragment extends Fragment {
     private List<Music> musics;
     private List<Album> mAlbums;
 
-    boolean flag;
+    boolean flag, shufel;
     private TabState mTabState;
 
     public static MusicListFragment newInstance(TabState state) {
@@ -138,8 +134,6 @@ public class MusicListFragment extends Fragment {
     }
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -168,12 +162,12 @@ public class MusicListFragment extends Fragment {
             }
         });
 
-        mImgNext.setOnClickListener(new View.OnClickListener() {
+        /*mImgNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBitBox.next();
+                    mBitBox.next();
             }
-        });
+        });*/
 
         mImgPreviouse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,13 +182,21 @@ public class MusicListFragment extends Fragment {
 
                 if (flag == true) {
                     mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeatone, null));
-
                     flag = false;
                 }
                 else if(flag == false) {
                     mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeat, null));
-
                     flag = true;
+                }
+            }
+        });
+
+        mShufel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (shufel == true){
+                    mShufel.setColorFilter(getContext().getResources().getColor(R.color.fadeWhite));
+                    shufel = false;
                 }
             }
         });
@@ -218,7 +220,6 @@ public class MusicListFragment extends Fragment {
             }
             else if (mTabState == TabState.singers){
                 mMediaPlayerList = mBitBox.loadArtist();
-
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 mAdapter = new MultiAdapter(mMediaPlayerList);
                 //mAdapter.setMusicList(mMediaPlayerList);
@@ -230,20 +231,21 @@ public class MusicListFragment extends Fragment {
 
     private void initView(View view) {
         // mImgPlay = view.findViewById(R.id.imageButton_play);
-        mTxtMusicName = view.findViewById(R.id.txt_musicName);
+        mTxtMusicName = view.findViewById(R.id.album_txt_musicName);
        // mTxtArtistName = view.findViewById(R.id.txt_artistName);
-        mEqulizer = view.findViewById(R.id.equlizer);
-        mImgCover = view.findViewById(R.id.cover);
-        mImgNext = view.findViewById(R.id.image_next);
-        mImgPreviouse = view.findViewById(R.id.image_previous);
-        mImgPause = view.findViewById(R.id.imageButton_pause);
-        mImgRepeat = view.findViewById(R.id.icon_repeat);
+        mEqulizer = view.findViewById(R.id.album_equlizer);
+        mImgCover = view.findViewById(R.id.album_cover);
+        mImgNext = view.findViewById(R.id.album_image_next);
+        mImgPreviouse = view.findViewById(R.id.album_image_previous);
+        mImgPause = view.findViewById(R.id.album_imageButton_pause);
+        mImgRepeat = view.findViewById(R.id.album_icon_repeat);
+        mShufel = view.findViewById(R.id.album_icon_shufel);
        // mTextViewSongTitleBottemsheet = view.findViewById(R.id.textview_title_bottemsheet);
-        mRecyclerView = view.findViewById(R.id.recycler);
-        mlayoutDetailMusic = view.findViewById(R.id.framelayout_sheet_behavior);
+        mRecyclerView = view.findViewById(R.id.album_recycler);
+        mlayoutDetailMusic = view.findViewById(R.id.album_framelayout_sheet_behavior);
         behavior = BottomSheetBehavior.from(mlayoutDetailMusic);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mseekbar = view.findViewById(R.id.seekbar);
+        mseekbar = view.findViewById(R.id.album_seekbar);
         handler.postDelayed(updateTime, 100);
         mseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -319,7 +321,8 @@ public class MusicListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (mTabState == TabState.albums){
-                       // mMediaPlayerList = mBitBox.getMusicOfAlbum(album.getAlbumId());
+                        Intent intent = AlbumMusicActivity.newIntent(getActivity(),album.getAlbumId());
+                        startActivity(intent);
 
                     }
                 }

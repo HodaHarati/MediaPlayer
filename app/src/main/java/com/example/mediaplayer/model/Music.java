@@ -12,6 +12,8 @@ public class Music {
     private String mAlbumPath;
     private String mAssetPath;
     private int mMusicPosition;
+    private Long mAlbumId;
+    private Long mArtistId;
 
     public UUID getmUuid() {
         return mUuid;
@@ -74,6 +76,22 @@ public class Music {
         this.mAlbumPath = mAlbumPath;
     }
 
+    public Long getmAlbumId() {
+        return mAlbumId;
+    }
+
+    public void setmAlbumId(Long mAlbumId) {
+        this.mAlbumId = mAlbumId;
+    }
+
+    public Long getmArtistId() {
+        return mArtistId;
+    }
+
+    public void setmArtistId(Long mArtistId) {
+        this.mArtistId = mArtistId;
+    }
+
     public Music(String mNameMusic, String mNameSinger, String mNameAlbum) {
         this.mUuid = UUID.randomUUID();
         this.mNameMusic = mNameMusic;
@@ -93,11 +111,12 @@ public class Music {
         this.mNameMusic = mNameMusic;
     }*/
 
-    public Music(Long _id, String mNameMusic, String mNameSinger, String mNameAlbum, String mAlbumPath) {
+    public Music(Long _id, String mNameMusic, String mNameSinger, String mNameAlbum, String mAlbumPath, Long mAlbumId) {
         this._id = _id;
         this.mNameMusic = mNameMusic;
         this.mNameSinger = mNameSinger;
         this.mNameAlbum = mNameAlbum;
         this.mAlbumPath = mAlbumPath;
+        this.mAlbumId = mAlbumId;
     }
 }

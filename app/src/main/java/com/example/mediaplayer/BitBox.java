@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.example.mediaplayer.controller.MusicListFragment;
 import com.example.mediaplayer.model.Album;
 import com.example.mediaplayer.model.Artist;
 import com.example.mediaplayer.model.Music;
@@ -26,6 +27,7 @@ public class BitBox {
     private Context mContext;
     private MediaPlayer mMediaplayer ;
     ContentResolver contentResolver;
+    private Music nextMusic;
     //private AssetManager mAssetManager;
 
 
@@ -77,6 +79,9 @@ public class BitBox {
             mMediaplayer.release();
             mMediaplayer = null;
         }
+            mMediaplayer = MediaPlayer.create(mContext,getMusicUri(music));
+            mMediaplayer.start();
+            curentMusic = music;
 
 
       /*  AssetFileDescriptor descriptor = mContext.getAssets().openFd(music.getmAssetPath());
@@ -87,28 +92,25 @@ public class BitBox {
         mMediaplayer.prepare();
         mMediaplayer.start();*/
 
-            mMediaplayer = MediaPlayer.create(mContext,getMusicUri(music));
-            mMediaplayer.start();
-            curentMusic = music;
+   }
 
 
-    }
 
-    public Music next(){
-       int index = mMusic.indexOf(curentMusic);
+    public Music next(boolean shufel){
 
-       Music nextMusic = mMusic.get((index+1)% mMusic.size());
-       curentMusic = nextMusic;
-       play(nextMusic);
-       return nextMusic;
+           int index = mMusic.indexOf(curentMusic);
+           nextMusic = mMusic.get((index + 1) % mMusic.size());
+           curentMusic = nextMusic;
+           play(curentMusic);
+           return curentMusic;
     }
 
     public Music previous (){
        int index = mMusic.indexOf(curentMusic);
        Music previousMusic = mMusic.get((mMusic.size() + (index - 1))% mMusic.size());
        curentMusic = previousMusic;
-       play(previousMusic);
-       return previousMusic;
+       play(curentMusic);
+       return curentMusic;
     }
 
 
@@ -128,7 +130,8 @@ public class BitBox {
                     Long currentId = songCursor.getLong(songId);
                     String currentArtist = songCursor.getString(songArtist);
                     String currentAlbum = songCursor.getString(songAlbum);
-                    Music music = new Music(currentId, currentTitle, currentArtist, currentAlbum, getAlbumMusic(currentAlbum));
+                    Long currentAlbumId = songCursor.getLong(albumId);
+                    Music music = new Music(currentId, currentTitle, currentArtist, currentAlbum, getAlbumMusic(currentAlbum), currentAlbumId);
                     musicList.add(music);
                 } while (songCursor.moveToNext());
                 songCursor.close();
@@ -136,6 +139,8 @@ public class BitBox {
 
         return musicList;
     }
+
+
 
     public String getAlbumMusic(String songAlbum) {
         String path="";
@@ -146,13 +151,24 @@ public class BitBox {
                 new String[]{songAlbum},
                 null);
 
-        int a = cursor.getCount();
+        //int a = cursor.getCount();
         if (cursor.moveToFirst()) {
            path= cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
 
         }
         return path;
     }
+
+    public List<Music> loadMusicByAlbum(Long albumId){
+        List<Music> musicList = new ArrayList<>();
+        for (Music music: loadMusic()) {
+            if (music.getmAlbumId().equals(albumId)){
+                musicList.add(music);
+            }
+        }
+        return musicList;
+    }
+
 
     public List<Album> loadAlbum (){
         ArrayList<Album> albumList = new ArrayList<>();
@@ -204,6 +220,18 @@ public class BitBox {
        }
        return artistList;
      }
+
+
+    public List<Music> loadMusicByArtist(Long albumId){
+        List<Music> musicList = new ArrayList<>();
+        for (Music music: loadMusic()) {
+            if (music.getmAlbumId().equals(albumId)){
+                musicList.add(music);
+            }
+        }
+        return musicList;
+    }
+
 
     public List<Music> getMusicOfAlbum(long albumId) {
         List<Music> musicListAlbum = new ArrayList<>();
