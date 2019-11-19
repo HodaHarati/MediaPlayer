@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.example.mediaplayer.BitBox;
 import com.example.mediaplayer.R;
 import com.example.mediaplayer.model.Music;
+import com.example.mediaplayer.model.TabState;
 
 import java.util.List;
 
@@ -27,7 +28,10 @@ import java.util.List;
  */
 public class AlbumMusicFragment extends Fragment {
 
-    private Long albumid;
+    public static final String ARG_ARTISTID = "artistid";
+    public static final String ARG_TABSTATE = "tab";
+    private Long id;
+    private TabState tabState;
 
     private RecyclerView mAlbumRecycler;
     private AlbumMusicAdapter mAdapter;
@@ -35,12 +39,13 @@ public class AlbumMusicFragment extends Fragment {
 
 
 
-    public static final String ARG_ALBUMID = "albumid";
+    public static final String ARG_ID = "id";
 
-    public static AlbumMusicFragment newInstance(Long albumid) {
+    public static AlbumMusicFragment newInstance(Long id, TabState tabState) {
 
         Bundle args = new Bundle();
-        args.putLong(ARG_ALBUMID, albumid);
+        args.putLong(ARG_ID, id);
+        args.putSerializable(ARG_TABSTATE, tabState);
         AlbumMusicFragment fragment = new AlbumMusicFragment();
         fragment.setArguments(args);
         return fragment;
@@ -55,9 +60,8 @@ public class AlbumMusicFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        albumid = getArguments().getLong(ARG_ALBUMID);
-
-
+        id = getArguments().getLong(ARG_ID);
+        tabState = (TabState) getArguments().getSerializable(ARG_TABSTATE);
     }
 
     @Override
@@ -73,7 +77,12 @@ public class AlbumMusicFragment extends Fragment {
     }
 
     private void setAdapter() {
-        mlistMusic = BitBox.getInstanse(getActivity()).loadMusicByAlbum(albumid);
+        if (tabState == TabState.albums) {
+            mlistMusic = BitBox.getInstanse(getActivity()).loadMusicByAlbum(id);  // id = albumId
+        } else if(tabState == TabState.singers){
+            mlistMusic = BitBox.getInstanse(getActivity()).loadMusicByArtist(id); // id = artistId
+        }
+
         mAlbumRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new AlbumMusicAdapter(mlistMusic);
         mAlbumRecycler.setAdapter(mAdapter);

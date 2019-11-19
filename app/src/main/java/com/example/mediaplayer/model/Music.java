@@ -111,12 +111,13 @@ public class Music {
         this.mNameMusic = mNameMusic;
     }*/
 
-    public Music(Long _id, String mNameMusic, String mNameSinger, String mNameAlbum, String mAlbumPath, Long mAlbumId) {
+    public Music(Long _id, String mNameMusic, String mNameSinger, String mNameAlbum, String mAlbumPath, Long mAlbumId, Long mArtistId) {
         this._id = _id;
         this.mNameMusic = mNameMusic;
         this.mNameSinger = mNameSinger;
         this.mNameAlbum = mNameAlbum;
         this.mAlbumPath = mAlbumPath;
         this.mAlbumId = mAlbumId;
+        this.mArtistId = mArtistId;
     }
 }

@@ -8,6 +8,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.example.mediaplayer.controller.MusicListFragment;
 import com.example.mediaplayer.model.Album;
 import com.example.mediaplayer.model.Artist;
@@ -28,6 +30,7 @@ public class BitBox {
     private MediaPlayer mMediaplayer ;
     ContentResolver contentResolver;
     private Music nextMusic;
+   // private BitBoxCallbacks mBitboxCallbacks;
     //private AssetManager mAssetManager;
 
 
@@ -43,6 +46,10 @@ public class BitBox {
             mMusic = loadMusic();
             mMediaplayer = new MediaPlayer();
      }
+
+    /*public void setmBitboxCallbacks(BitBoxCallbacks mBitboxCallbacks) {
+        this.mBitboxCallbacks = mBitboxCallbacks;
+    }*/
 
     public MediaPlayer getmMediaplayer() {
         return mMediaplayer;
@@ -96,13 +103,18 @@ public class BitBox {
 
 
 
-    public Music next(boolean shufel){
+    public Music next(){
 
-           int index = mMusic.indexOf(curentMusic);
-           nextMusic = mMusic.get((index + 1) % mMusic.size());
-           curentMusic = nextMusic;
-           play(curentMusic);
-           return curentMusic;
+       int index = mMusic.indexOf(curentMusic);
+       nextMusic = mMusic.get((index + 1) % mMusic.size());
+       curentMusic = nextMusic;
+       play(curentMusic);
+       return curentMusic;
+    }
+
+    public Music repeateOne(){
+       play(curentMusic);
+       return curentMusic;
     }
 
     public Music previous (){
@@ -125,13 +137,15 @@ public class BitBox {
                 int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
                 int songAlbum = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
                 int albumId = songCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
+                int artistId = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID);
                 do {
                     String currentTitle = songCursor.getString(songTitle);
                     Long currentId = songCursor.getLong(songId);
                     String currentArtist = songCursor.getString(songArtist);
                     String currentAlbum = songCursor.getString(songAlbum);
                     Long currentAlbumId = songCursor.getLong(albumId);
-                    Music music = new Music(currentId, currentTitle, currentArtist, currentAlbum, getAlbumMusic(currentAlbum), currentAlbumId);
+                    Long currentArtistId = songCursor.getLong(artistId);
+                    Music music = new Music(currentId, currentTitle, currentArtist, currentAlbum, getAlbumMusic(currentAlbum), currentAlbumId, currentArtistId);
                     musicList.add(music);
                 } while (songCursor.moveToNext());
                 songCursor.close();
@@ -205,15 +219,15 @@ public class BitBox {
        Uri artistUri = MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI;
        Cursor artistCurcer = contentResolver.query(artistUri, null, null, null, null);
        if (artistCurcer != null && artistCurcer.moveToFirst()){
-           int artistId = artistCurcer.getColumnIndex(MediaStore.Audio.Artists._ID);
+           int id = artistCurcer.getColumnIndex(MediaStore.Audio.Artists._ID);
            int artistName = artistCurcer.getColumnIndex(MediaStore.Audio.Artists.ARTIST);
            int artistNumberOfSong = artistCurcer.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS);
            do {
-               Long currentArtistId = artistCurcer.getLong(artistId);
+               Long currentId = artistCurcer.getLong(id);
                String currentArtistName = artistCurcer.getString(artistName);
                int currentNumberOfSong = artistCurcer.getInt(artistNumberOfSong);
 
-               Artist artist = new Artist(currentArtistId, currentArtistName,currentNumberOfSong);
+               Artist artist = new Artist(currentId, currentArtistName,currentNumberOfSong);
                artistList.add(artist);
            } while (artistCurcer.moveToNext());
            artistCurcer.close();
@@ -222,10 +236,10 @@ public class BitBox {
      }
 
 
-    public List<Music> loadMusicByArtist(Long albumId){
+    public List<Music> loadMusicByArtist(Long artistId){
         List<Music> musicList = new ArrayList<>();
         for (Music music: loadMusic()) {
-            if (music.getmAlbumId().equals(albumId)){
+            if (music.getmArtistId().equals(artistId)){
                 musicList.add(music);
             }
         }
@@ -241,4 +255,8 @@ public class BitBox {
         }
         return musicListAlbum;
     }
+
+    /*public interface BitBoxCallbacks{
+        boolean setFlag();
+    }*/
 }

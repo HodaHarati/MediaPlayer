@@ -59,16 +59,16 @@ public class MusicListFragment extends Fragment {
     private MultiAdapter mAdapter;
     private BitBox mBitBox;
 
-    private SeekBar mseekbar;
+    /*private SeekBar mseekbar;
     private ImageView mImgNext, mImgPreviouse, mImgRepeat, mShufel, mEqulizer, mImgCover;
-    private ImageButton mImgPause;
+    private ImageButton mImgPause;*/
     private TextView mTxtMusicName;
-   // private TextView mTxtArtistName;
+    // private TextView mTxtArtistName;
 
 
 
-   // private TextView mTextViewSongTitleBottemsheet;
-    private BottomSheetBehavior behavior;
+    // private TextView mTextViewSongTitleBottemsheet;
+   // private BottomSheetBehavior behavior;
     FrameLayout mlayoutDetailMusic;
 
     private Music music;
@@ -79,6 +79,7 @@ public class MusicListFragment extends Fragment {
 
     boolean flag, shufel;
     private TabState mTabState;
+    private Callbacks mCallback;
 
     public static MusicListFragment newInstance(TabState state) {
 
@@ -141,67 +142,81 @@ public class MusicListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
 
         initView(view);
-        initListener();
+        //initListener();
         setAdapter();
 
 
         return view;
     }
 
-    private void initListener() {
-        mImgPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mBitBox.getmMediaplayer().isPlaying()){
-                    mBitBox.getmMediaplayer().pause();
-                    mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_play,null));
-                }else {
-                    mBitBox.getmMediaplayer().start();
-                    mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_pause, null));
-                }
-            }
-        });
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
-        /*mImgNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    mBitBox.next();
-            }
-        });*/
-
-        mImgPreviouse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBitBox.previous();
-            }
-        });
-
-        mImgRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (flag == true) {
-                    mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeatone, null));
-                    flag = false;
-                }
-                else if(flag == false) {
-                    mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeat, null));
-                    flag = true;
-                }
-            }
-        });
-
-        mShufel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (shufel == true){
-                    mShufel.setColorFilter(getContext().getResources().getColor(R.color.fadeWhite));
-                    shufel = false;
-                }
-            }
-        });
+        if (context instanceof Callbacks)
+            mCallback = (Callbacks) context;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallback = null;
+    }
+
+    /*private void initListener() {
+                mImgPause.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (mBitBox.getmMediaplayer().isPlaying()){
+                            mBitBox.getmMediaplayer().pause();
+                            mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_play,null));
+                        }else {
+                            mBitBox.getmMediaplayer().start();
+                            mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_pause, null));
+                        }
+                    }
+                });
+
+                mImgNext.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                            mBitBox.next();
+                    }
+                });
+
+                mImgPreviouse.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mBitBox.previous();
+                    }
+                });
+
+                mImgRepeat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (flag == true) {
+                            mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeatone, null));
+                            flag = false;
+                        }
+                        else if(flag == false) {
+                            mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeat, null));
+                            flag = true;
+                        }
+                    }
+                });
+
+                mShufel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (shufel == true){
+                            mShufel.setColorFilter(getContext().getResources().getColor(R.color.fadeWhite));
+                            shufel = false;
+                        }
+                    }
+                });
+            }
+        */
     private void setAdapter() {
 
         if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
@@ -215,7 +230,7 @@ public class MusicListFragment extends Fragment {
                 mMediaPlayerList = mBitBox.loadAlbum();
                 mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
                 mAdapter = new MultiAdapter(mMediaPlayerList);
-               // mAdapter.setMusicList(mMediaPlayerList);
+                // mAdapter.setMusicList(mMediaPlayerList);
                 mRecyclerView.setAdapter(mAdapter);
             }
             else if (mTabState == TabState.singers){
@@ -232,17 +247,17 @@ public class MusicListFragment extends Fragment {
     private void initView(View view) {
         // mImgPlay = view.findViewById(R.id.imageButton_play);
         mTxtMusicName = view.findViewById(R.id.album_txt_musicName);
-       // mTxtArtistName = view.findViewById(R.id.txt_artistName);
+        /*// mTxtArtistName = view.findViewById(R.id.txt_artistName);
         mEqulizer = view.findViewById(R.id.album_equlizer);
         mImgCover = view.findViewById(R.id.album_cover);
         mImgNext = view.findViewById(R.id.album_image_next);
         mImgPreviouse = view.findViewById(R.id.album_image_previous);
         mImgPause = view.findViewById(R.id.album_imageButton_pause);
         mImgRepeat = view.findViewById(R.id.album_icon_repeat);
-        mShufel = view.findViewById(R.id.album_icon_shufel);
-       // mTextViewSongTitleBottemsheet = view.findViewById(R.id.textview_title_bottemsheet);
+        mShufel = view.findViewById(R.id.album_icon_shufel);*/
+        // mTextViewSongTitleBottemsheet = view.findViewById(R.id.textview_title_bottemsheet);
         mRecyclerView = view.findViewById(R.id.album_recycler);
-        mlayoutDetailMusic = view.findViewById(R.id.album_framelayout_sheet_behavior);
+     /*   mlayoutDetailMusic = view.findViewById(R.id.album_framelayout_sheet_behavior);
         behavior = BottomSheetBehavior.from(mlayoutDetailMusic);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mseekbar = view.findViewById(R.id.album_seekbar);
@@ -264,6 +279,7 @@ public class MusicListFragment extends Fragment {
 
             }
         });
+    */
     }
 
 
@@ -285,13 +301,13 @@ public class MusicListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mTabState == TabState.musics) {
+                    mCallback.clickMusicHolder(mTabState,music);
+                    /*if (mTabState == TabState.musics) {
                         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         mBitBox.play(music);
                         mTxtMusicName.setText(music.getmNameMusic());
-                        //mTxtArtistName.setText(music.getmNameSinger());
-                        mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
-                    }
+                       // mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
+                    }*/
                 }
             });
         }
@@ -321,7 +337,7 @@ public class MusicListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (mTabState == TabState.albums){
-                        Intent intent = AlbumMusicActivity.newIntent(getActivity(),album.getAlbumId());
+                        Intent intent = AlbumMusicActivity.newIntent(getActivity(),album.getAlbumId(), mTabState);
                         startActivity(intent);
 
                     }
@@ -341,18 +357,27 @@ public class MusicListFragment extends Fragment {
         private TextView mTextSingerName;
         private ImageView mImgSinger;
         private Artist artist;
+        private Album album;
         public ArtistHolder(@NonNull View itemView) {
             super(itemView);
             mTextSingerName = itemView.findViewById(R.id.textview_title_singer);
             mImgSinger = itemView.findViewById(R.id.img_singer_cover);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mTabState == TabState.singers){
+                        Intent intent = AlbumMusicActivity.newIntent(getActivity(), artist.get_id(), mTabState);
+                        startActivity(intent);
+                    }
+                }
+            });
         }
         public void bindSinger (Artist artist){
             this.artist = artist;
             mTextSingerName.setText(artist.getmArtistName());
-           // mImgSinger.setImageBitmap(BitmapFactory.decodeFile());
+            // mImgSinger.setImageBitmap(BitmapFactory.decodeFile());
         }
-
-
     }
 
     private class MultiAdapter extends RecyclerView.Adapter {
@@ -390,7 +415,7 @@ public class MusicListFragment extends Fragment {
             switch (viewType) {
                 case 0 :
                     View view = inflater.inflate(R.layout.music_item, parent, false);
-                    viewHolder= new MediaHolder(view);
+                    viewHolder = new MediaHolder(view);
                     break;
                 case 1 :
                     View view1 = inflater.inflate(R.layout.album_item, parent, false);
@@ -427,9 +452,12 @@ public class MusicListFragment extends Fragment {
 
 
 
+    public interface Callbacks {
+        void clickMusicHolder(TabState mTabstate, Music music);
+    }
 
 
-    private Runnable updateTime = new Runnable() {
+   /* private Runnable updateTime = new Runnable() {
         @Override
         public void run() {
             int time = mBitBox.getmMediaplayer().getCurrentPosition();
@@ -438,7 +466,7 @@ public class MusicListFragment extends Fragment {
 
             handler.postDelayed(this, 100);
         }
-    };
+    };*/
 
 
 
@@ -485,4 +513,6 @@ public class MusicListFragment extends Fragment {
         }
     }
 
- }
+
+
+}
