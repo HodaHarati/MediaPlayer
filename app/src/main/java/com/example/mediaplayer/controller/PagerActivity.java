@@ -132,7 +132,10 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
         mImgPreviouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBitBox.previous();
+                if (flag == true)
+                    mBitBox.previous();
+                else
+                    mBitBox.repeateOne();
             }
         });
 
