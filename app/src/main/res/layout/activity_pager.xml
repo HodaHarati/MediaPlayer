@@ -110,7 +110,7 @@
                 android:layout_marginRight="4dp"
                 android:gravity="center"/>
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/album_imageButton_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

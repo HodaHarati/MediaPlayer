@@ -17,6 +17,7 @@ import com.example.mediaplayer.model.Music;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class BitBox {
 
@@ -30,7 +31,7 @@ public class BitBox {
     private MediaPlayer mMediaplayer ;
     ContentResolver contentResolver;
     private Music nextMusic;
-   // private BitBoxCallbacks mBitboxCallbacks;
+    private BitBoxCallbacks mCallback;
     //private AssetManager mAssetManager;
 
 
@@ -47,9 +48,11 @@ public class BitBox {
             mMediaplayer = new MediaPlayer();
      }
 
-    /*public void setmBitboxCallbacks(BitBoxCallbacks mBitboxCallbacks) {
-        this.mBitboxCallbacks = mBitboxCallbacks;
-    }*/
+    public void setmCallback(BitBoxCallbacks mCallback) {
+        this.mCallback = mCallback;
+    }
+
+
 
     public MediaPlayer getmMediaplayer() {
         return mMediaplayer;
@@ -103,12 +106,13 @@ public class BitBox {
 
 
 
-    public Music next(){
-
-       int index = mMusic.indexOf(curentMusic);
-       nextMusic = mMusic.get((index + 1) % mMusic.size());
+    public Music next(List<Music> mList){
+       int index = mList.indexOf(curentMusic);
+       nextMusic = mList.get((index + 1) % mList.size());
        curentMusic = nextMusic;
        play(curentMusic);
+
+       mCallback.setUi(curentMusic);
        return curentMusic;
     }
 
@@ -116,6 +120,14 @@ public class BitBox {
        play(curentMusic);
        return curentMusic;
     }
+
+    /*public Music nextShufel(){
+       int index = mMusic.indexOf(curentMusic);
+        for (int i = 0; i <mMusic.size() ; ) {
+            nextMusic = mMusic.get();
+        }
+
+    }*/
 
     public Music previous (){
        int index = mMusic.indexOf(curentMusic);
@@ -256,7 +268,7 @@ public class BitBox {
         return musicListAlbum;
     }
 
-    /*public interface BitBoxCallbacks{
-        boolean setFlag();
-    }*/
+    public interface BitBoxCallbacks{
+        void setUi(Music music);
+    }
 }

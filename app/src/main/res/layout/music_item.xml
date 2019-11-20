@@ -24,8 +24,7 @@
         android:layout_marginLeft="8dp"
         android:textColor="#ffffff"
         app:layout_constraintLeft_toRightOf="@id/img_music_cover"
-        app:layout_constraintBottom_toTopOf="@id/textview_singer"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/textview_singer" />
 
 
 
@@ -36,8 +35,7 @@
         android:layout_marginLeft="8dp"
         android:textColor="#ffffff"
         app:layout_constraintTop_toBottomOf="@id/textview_title"
-        app:layout_constraintLeft_toRightOf="@id/img_music_cover"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintLeft_toRightOf="@id/img_music_cover" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -283,6 +283,8 @@ public class MusicListFragment extends Fragment {
     }
 
 
+
+
     private class MediaHolder extends RecyclerView.ViewHolder{
 
         private TextView mTextviewTitle;
@@ -302,6 +304,7 @@ public class MusicListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     mCallback.clickMusicHolder(mTabState,music);
+
                     /*if (mTabState == TabState.musics) {
                         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         mBitBox.play(music);
