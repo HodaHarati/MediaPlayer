@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controller.AlbumMusicActivity"
+    tools:context=".controller.PagerActivity"
     android:id="@+id/container_musicOfAlbum">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

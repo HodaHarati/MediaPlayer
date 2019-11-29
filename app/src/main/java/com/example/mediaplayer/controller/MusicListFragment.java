@@ -55,6 +55,7 @@ public class MusicListFragment extends Fragment {
     public static final String TAG_MUSIC_DETAIL = "musicDetail";
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE  = 1;
     public static final String ARG_ID = "id";
+    public static final int REQUEST_CODE_AlbumFargment = 0;
     private RecyclerView mRecyclerView;
     private MultiAdapter mAdapter;
     private BitBox mBitBox;
@@ -290,6 +291,7 @@ public class MusicListFragment extends Fragment {
         private TextView mTextviewTitle;
         private TextView mTextview;
         private ImageView mImageCover;
+        //private View mView;
         private Music music;
 
 
@@ -298,6 +300,7 @@ public class MusicListFragment extends Fragment {
             mTextviewTitle = itemView.findViewById(R.id.textview_title);
             mTextview = itemView.findViewById(R.id.textview_singer);
             mImageCover = itemView.findViewById(R.id.img_music_cover);
+           // mView = itemView.findViewById(R.id.line);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -341,7 +344,7 @@ public class MusicListFragment extends Fragment {
                 public void onClick(View view) {
                     if (mTabState == TabState.albums){
                         Intent intent = AlbumMusicActivity.newIntent(getActivity(),album.getAlbumId(), mTabState);
-                        startActivity(intent);
+                        startActivityForResult(intent, REQUEST_CODE_AlbumFargment);
 
                     }
                 }

@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.mediaplayer.controller.MusicListFragment;
+import com.example.mediaplayer.controller.PagerActivity;
 import com.example.mediaplayer.model.Album;
 import com.example.mediaplayer.model.Artist;
 import com.example.mediaplayer.model.Music;
@@ -31,7 +32,10 @@ public class BitBox {
     private MediaPlayer mMediaplayer ;
     ContentResolver contentResolver;
     private Music nextMusic;
+    private Music previousMusic;
     private BitBoxCallbacks mCallback;
+    private BitBoxFlagCallbacks mFlagCallback;
+    private BitBoxShufelCallbacks mShufelCallback;
     //private AssetManager mAssetManager;
 
 
@@ -51,8 +55,12 @@ public class BitBox {
     public void setmCallback(BitBoxCallbacks mCallback) {
         this.mCallback = mCallback;
     }
-
-
+    public void setmFlagCallback(BitBoxFlagCallbacks mFlagCallback) {
+        this.mFlagCallback = mFlagCallback;
+    }
+    public void setmShufelCallback(BitBoxShufelCallbacks mShufelCallback) {
+        this.mShufelCallback = mShufelCallback;
+    }
 
     public MediaPlayer getmMediaplayer() {
         return mMediaplayer;
@@ -93,6 +101,15 @@ public class BitBox {
             mMediaplayer.start();
             curentMusic = music;
 
+            mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    mMediaplayer.start();
+                    mMediaplayer.seekTo(0);
+
+                }
+            });
+
 
       /*  AssetFileDescriptor descriptor = mContext.getAssets().openFd(music.getmAssetPath());
         long start = descriptor.getStartOffset();
@@ -105,37 +122,64 @@ public class BitBox {
    }
 
 
-
     public Music next(List<Music> mList){
-       int index = mList.indexOf(curentMusic);
-       nextMusic = mList.get((index + 1) % mList.size());
+       int index;
+       index = mList.indexOf(curentMusic);
+       if (mFlagCallback.setFlag() == true && mShufelCallback.setShufel() == false) {
+           nextMusic = mList.get((index + 1) % mList.size());
+           curentMusic = nextMusic;
+       } else if (mFlagCallback.setFlag() == true && mShufelCallback.setShufel() == true) {
+           Random random = new Random();
+           index = random.nextInt((mList.size()));
+           nextMusic = mList.get(index);
+           curentMusic = nextMusic;
+       }
+       play(curentMusic);
+       mCallback.setUi(curentMusic);
+       return curentMusic;
+
+    }
+
+    /*public Music repeateOne(){
+       play(curentMusic);
+       return curentMusic;
+    }*/
+
+    /*public Music nextShufel(List<Music> mList){
+       Random random = new Random();
+       int index = random.nextInt((mList.size()));
+       nextMusic = mList.get(index);
        curentMusic = nextMusic;
        play(curentMusic);
+       mCallback.setUi(curentMusic);
+       return curentMusic;
+    }*/
 
+    public Music previous (List<Music> mList){
+       int index = mList.indexOf(curentMusic);
+        if (mFlagCallback.setFlag() == true && mShufelCallback.setShufel() == false) {
+            previousMusic = mList.get((mList.size() + (index - 1)) % mList.size());
+            curentMusic = previousMusic;
+        }else if (mFlagCallback.setFlag() == true && mShufelCallback.setShufel() == true){
+            Random random = new Random();
+            index = random.nextInt((mList.size()));
+            previousMusic = mList.get(index);
+            curentMusic = previousMusic;
+        }
+       play(curentMusic);
        mCallback.setUi(curentMusic);
        return curentMusic;
     }
 
-    public Music repeateOne(){
-       play(curentMusic);
+    /*public Music previouseShufel(List<Music> mList){
+       Random random = new Random();
+       int index = random.nextInt((mList.size()));
+       Music previouseMusic = mList.get(index);
+       curentMusic = previouseMusic;
+       play(previouseMusic);
+       mCallback.setUi(curentMusic);
        return curentMusic;
-    }
-
-    /*public Music nextShufel(){
-       int index = mMusic.indexOf(curentMusic);
-        for (int i = 0; i <mMusic.size() ; ) {
-            nextMusic = mMusic.get();
-        }
-
     }*/
-
-    public Music previous (){
-       int index = mMusic.indexOf(curentMusic);
-       Music previousMusic = mMusic.get((mMusic.size() + (index - 1))% mMusic.size());
-       curentMusic = previousMusic;
-       play(curentMusic);
-       return curentMusic;
-    }
 
 
     public List<Music> loadMusic() {
@@ -270,5 +314,13 @@ public class BitBox {
 
     public interface BitBoxCallbacks{
         void setUi(Music music);
+    }
+
+    public interface BitBoxFlagCallbacks{
+       boolean setFlag ();
+    }
+
+    public interface BitBoxShufelCallbacks{
+       boolean setShufel();
     }
 }

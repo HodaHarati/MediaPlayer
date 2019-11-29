@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="200dp"
     android:layout_margin="16dp"
     android:id="@+id/frame_album">
 
 <!--    <com.google.android.material.card.MaterialCardView-->
 <!--        style="@style/Widget.MaterialComponents.CardView"-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
+<!--        android:layout_height="200dp"-->
 <!--        android:padding="8dp">-->
 
         <LinearLayout
@@ -22,20 +22,24 @@
                 android:id="@+id/img_album"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
+                android:scaleType="centerCrop"
                 android:layout_weight="3" />
             <TextView
                 android:id="@+id/txt_album_name"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="#ffffff"
-                android:layout_margin="8dp" />
+                android:layout_marginTop="4dp"/>
             <TextView
                 android:id="@+id/txt_singerOfAlbum"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textColor="#ffffff"/>
 
         </LinearLayout>

@@ -14,8 +14,9 @@ import com.example.mediaplayer.model.TabState;
 public class AlbumMusicActivity extends AppCompatActivity {
 
     public static final String EXTRA_ALBUM_ID = "id";
-   // public static final String EXTRA_ARTIST_ID = "id";
     public static final String EXTRA_TAB_NAME = "tabName";
+
+    private AlbumMusicFragment albumMusicFragment;
 
     public static Intent newIntent (Context context, Long id, TabState tag){
         Intent intent = new Intent(context, AlbumMusicActivity.class);
@@ -33,11 +34,19 @@ public class AlbumMusicActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.container_musicOfAlbum);
         Long albumid = getIntent().getLongExtra(EXTRA_ALBUM_ID, 0);
-       // Long artistid = getIntent().getLongExtra(EXTRA_ARTIST_ID, 0);
         TabState tag = (TabState) getIntent().getSerializableExtra(EXTRA_TAB_NAME);
+
+        albumMusicFragment = AlbumMusicFragment.newInstance(albumid, tag);
 
         if (fragment == null)
             fragmentManager.beginTransaction()
-                            .add(R.id.container_musicOfAlbum, AlbumMusicFragment.newInstance(albumid, tag)).commit();
+                            .add(R.id.container_musicOfAlbum, albumMusicFragment).commit();
+
     }
+/*
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        albumMusicFragment.
+    }*/
 }

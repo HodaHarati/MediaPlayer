@@ -1,12 +1,23 @@
 package com.example.mediaplayer.controller;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -15,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mediaplayer.BitBox;
 import com.example.mediaplayer.R;
@@ -26,7 +38,18 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagerActivity extends AppCompatActivity implements MusicListFragment.Callbacks, BitBox.BitBoxCallbacks{
+import static com.example.mediaplayer.BitBox.MY_PERMISSION_REQUEST;
+
+
+public  class PagerActivity extends AppCompatActivity implements
+                                                        MusicListFragment.Callbacks,
+                                                        BitBox.BitBoxCallbacks,
+                                                        BitBox.BitBoxFlagCallbacks,
+                                                        BitBox.BitBoxShufelCallbacks {
+
+    public static final String EXTRA_ALBUM_ID = "id";
+    public static final String EXTRA_TAB_NAME = "tabName";
+
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
 
@@ -34,7 +57,7 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
     private SeekBar mseekbar;
     private ImageView mImgNext, mImgPreviouse, mImgRepeat, mShufel, mEqulizer, mImgCover, mImgPause;
     private TextView mTxtMusicName;
-    private boolean flag = true, shufel;
+    private boolean flag = true, shufel= false;
     private List<Music> musics;
 
     private BottomSheetBehavior behavior;
@@ -47,6 +70,14 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
         Intent intent = new Intent(context, PagerActivity.class);
         return intent;
     }
+
+    /*public static Intent newIntent (Context context, Long id, TabState tag){
+        Intent intent = new Intent(context, PagerActivity.class);
+        intent.putExtra(EXTRA_ALBUM_ID, id);
+        intent.putExtra(EXTRA_TAB_NAME, tag);
+        return intent;
+    }*/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +105,8 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
 
         mBitBox = BitBox.getInstanse(getApplicationContext());
         mBitBox.setmCallback(this);
+        mBitBox.setmFlagCallback(this);
+        mBitBox.setmShufelCallback(this);
         initListener();
 
 
@@ -124,24 +157,14 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
         mImgNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flag == true && shufel == false)
-                    mBitBox.next(mBitBox.getmMusic());
-                else if (flag == true && shufel == true)
-                    ;
-                else if (flag == false && shufel == false)
-                    mBitBox.repeateOne();
-                else if (flag == false && shufel == true)
-                    mBitBox.repeateOne();
+                mBitBox.next(mBitBox.getmMusic());
             }
         });
 
         mImgPreviouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flag == true)
-                    mBitBox.previous();
-                else
-                    mBitBox.repeateOne();
+                mBitBox.previous(mBitBox.getmMusic());
             }
         });
 
@@ -163,11 +186,11 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
             @Override
             public void onClick(View view) {
                 if (shufel == true){
-                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_shufel_fade, null));
+                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_shufel, null));
                     shufel = false;
                 }
                 else if (shufel == false){
-                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_shufel, null));
+                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_shufel_fade, null));
                     shufel = true;
                 }
             }
@@ -181,7 +204,6 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
             int time = mBitBox.getmMediaplayer().getCurrentPosition();
             mseekbar.setMax(mBitBox.getmMediaplayer().getDuration());
             mseekbar.setProgress(time);
-
             handler.postDelayed(this, 100);
         }
     };
@@ -193,8 +215,7 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
         if (mTabstate == TabState.musics) {
             behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             mBitBox.play(music);
-            mTxtMusicName.setText(music.getmNameMusic());
-            mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
+            setUi(music);
             mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_pause, null));
         }
     }
@@ -204,5 +225,16 @@ public class PagerActivity extends AppCompatActivity implements MusicListFragmen
     public void setUi(Music music) {
         mTxtMusicName.setText(music.getmNameMusic());
         mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
+    }
+
+
+    @Override
+    public boolean setFlag() {
+        return flag;
+    }
+
+    @Override
+    public boolean setShufel() {
+        return shufel;
     }
 }

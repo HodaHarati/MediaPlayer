@@ -161,24 +161,22 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
         mImgNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flag == true && shufel == false)
+                mBitBox.next(mlistMusic);
+                /*if (flag == true && shufel == false)
                     mBitBox.next(mlistMusic);
                 else if (flag == true && shufel == true)
-                    ;
+                    mBitBox.nextShufel(mlistMusic);
                 else if (flag == false && shufel == false)
                     mBitBox.repeateOne();
                 else if (flag == false && shufel == true)
-                    mBitBox.repeateOne();
+                    mBitBox.repeateOne();*/
             }
         });
 
         mImgPreviouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (flag == true)
-                    mBitBox.previous();
-                else
-                    mBitBox.repeateOne();
+                mBitBox.previous(mlistMusic);
             }
         });
 
@@ -200,11 +198,11 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
             @Override
             public void onClick(View view) {
                 if (shufel == true){
-                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_shufel_fade, null));
+                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_shufel, null));
                     shufel = false;
                 }
                 else if (shufel == false){
-                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_shufel, null));
+                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_shufel_fade, null));
                     shufel = true;
                 }
             }
@@ -237,6 +235,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
                     mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
                 }
             });
+
         }
         public void bind(Music music){
             this.music = music;
@@ -244,6 +243,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
             mSingerAlbumMusic.setText(music.getmNameSinger());//.substring(0,music.getmNameSinger().lastIndexOf("-")));
             mImageCoverAlbumMusic.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
         }
+
     }
 
     private class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicHolder>{
@@ -287,6 +287,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
             handler.postDelayed(this, 100);
         }
     };
+
 
 
     @Override
