@@ -33,9 +33,10 @@ public class BitBox {
     ContentResolver contentResolver;
     private Music nextMusic;
     private Music previousMusic;
-    private BitBoxCallbacks mCallback;
+    /*private BitBoxCallbacks mCallback;*/
     private BitBoxFlagCallbacks mFlagCallback;
     private BitBoxShufelCallbacks mShufelCallback;
+    private updateInfoCallbacks mUpdateInfoCallbacks;
     //private AssetManager mAssetManager;
 
 
@@ -50,11 +51,12 @@ public class BitBox {
             mContext = context.getApplicationContext();
             mMusic = loadMusic();
             mMediaplayer = new MediaPlayer();
+            mUpdateInfoCallbacks = (updateInfoCallbacks) context;
      }
 
-    public void setmCallback(BitBoxCallbacks mCallback) {
+    /*public void setmCallback(BitBoxCallbacks mCallback) {
         this.mCallback = mCallback;
-    }
+    }*/
     public void setmFlagCallback(BitBoxFlagCallbacks mFlagCallback) {
         this.mFlagCallback = mFlagCallback;
     }
@@ -90,7 +92,7 @@ public class BitBox {
        return musicUri;
    }
 
-    public void play(Music music)  {
+    public void play(final Music music)  {
 
         if(mMediaplayer.isPlaying()){
             mMediaplayer.stop();
@@ -101,11 +103,14 @@ public class BitBox {
             mMediaplayer.start();
             curentMusic = music;
 
+        mUpdateInfoCallbacks.updateSong(music);
+
             mMediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     mMediaplayer.start();
                     mMediaplayer.seekTo(0);
+            mUpdateInfoCallbacks.updateSong(music);
 
                 }
             });
@@ -135,7 +140,7 @@ public class BitBox {
            curentMusic = nextMusic;
        }
        play(curentMusic);
-       mCallback.setUi(curentMusic);
+      /* mCallback.setUi(curentMusic);*/
        return curentMusic;
 
     }
@@ -167,7 +172,7 @@ public class BitBox {
             curentMusic = previousMusic;
         }
        play(curentMusic);
-       mCallback.setUi(curentMusic);
+//       mCallback.setUi(curentMusic);
        return curentMusic;
     }
 
@@ -312,9 +317,9 @@ public class BitBox {
         return musicListAlbum;
     }
 
-    public interface BitBoxCallbacks{
+  /*  public interface BitBoxCallbacks{
         void setUi(Music music);
-    }
+    }*/
 
     public interface BitBoxFlagCallbacks{
        boolean setFlag ();
@@ -322,5 +327,9 @@ public class BitBox {
 
     public interface BitBoxShufelCallbacks{
        boolean setShufel();
+    }
+
+    public interface updateInfoCallbacks{
+        void updateSong(Music music);
     }
 }

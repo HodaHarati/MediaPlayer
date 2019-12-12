@@ -1,6 +1,7 @@
 package com.example.mediaplayer.controller;
 
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
@@ -32,7 +33,9 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbacks{
+public class AlbumMusicFragment extends Fragment {//implements BitBox.BitBoxCallbacks{
+
+    public static final String TAG = "AlbumMusicFragment";
 
     public static final String ARG_ARTISTID = "artistid";
     public static final String ARG_TABSTATE = "tab";
@@ -43,8 +46,10 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
     private AlbumMusicAdapter mAdapter;
     private List<Music> mlistMusic;
 
+//    private CallbacksAlbumMusic callbacksAlbumMusic;
     private BitBox mBitBox;
-    private SeekBar mseekbar;
+    private MusicCallBack mActivity;
+   /* private SeekBar mseekbar;
     private ImageView mImgNext, mImgPreviouse, mImgRepeat, mShufel, mEqulizer, mImgCover, mImgPause;
     private TextView mTxtMusicName;
     private boolean flag = true, shufel;
@@ -52,7 +57,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
     private BottomSheetBehavior behavior;
     FrameLayout mlayoutDetailMusic;
     private Handler handler = new Handler();
-
+*/
 
 
 
@@ -79,6 +84,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
         super.onCreate(savedInstanceState);
         id = getArguments().getLong(ARG_ID);
         tabState = (TabState) getArguments().getSerializable(ARG_TABSTATE);
+        mActivity = (MusicCallBack) getActivity();
     }
 
     @Override
@@ -89,7 +95,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
 
         mAlbumRecycler = view.findViewById(R.id.album_recycler);
 
-        mTxtMusicName = view.findViewById(R.id.album_txt_musicName);
+        /*mTxtMusicName = view.findViewById(R.id.album_txt_musicName);
         mEqulizer = view.findViewById(R.id.album_equlizer);
         mImgCover = view.findViewById(R.id.album_cover);
         mImgNext = view.findViewById(R.id.album_image_next);
@@ -102,14 +108,26 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
         behavior = BottomSheetBehavior.from(mlayoutDetailMusic);
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         mseekbar = view.findViewById(R.id.album_seekbar);
-        handler.postDelayed(updateTime, 100);
+        handler.postDelayed(updateTime, 100);*/
 
         mBitBox = BitBox.getInstanse(getActivity());
-        mBitBox.setmCallback(this);
+    //    mBitBox.setmCallback(this);
 
-        initListener();
+       // initListener();
         setAdapter();
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        /*callbacksAlbumMusic = ((CallbacksAlbumMusic) context);*/
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+//        callbacksAlbumMusic = null;
     }
 
     private void setAdapter() {
@@ -125,7 +143,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
     }
 
 
-    private void initListener() {
+   /* private void initListener() {
         mseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
@@ -162,14 +180,14 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
             @Override
             public void onClick(View view) {
                 mBitBox.next(mlistMusic);
-                /*if (flag == true && shufel == false)
+                *//*if (flag == true && shufel == false)
                     mBitBox.next(mlistMusic);
                 else if (flag == true && shufel == true)
                     mBitBox.nextShufel(mlistMusic);
                 else if (flag == false && shufel == false)
                     mBitBox.repeateOne();
                 else if (flag == false && shufel == true)
-                    mBitBox.repeateOne();*/
+                    mBitBox.repeateOne();*//*
             }
         });
 
@@ -209,7 +227,7 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
         });
     }
 
-
+*/
 
 
     private class AlbumMusicHolder extends RecyclerView.ViewHolder{
@@ -229,10 +247,13 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    /*mBitBox.play(music);*/
+                    mActivity.UiHandler(music);
+                    //callbacksAlbumMusic.clickMusicHolderAlbum(music);
+                    /*behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     mBitBox.play(music);
                     mTxtMusicName.setText(music.getmNameMusic());
-                    mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
+                    mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));*/
                 }
             });
 
@@ -275,8 +296,11 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
     }
 
 
+    public interface CallbacksAlbumMusic {
+        void clickMusicHolderAlbum( Music music);
+    }
 
-
+/*
     private Runnable updateTime = new Runnable() {
         @Override
         public void run() {
@@ -287,13 +311,14 @@ public class AlbumMusicFragment extends Fragment implements BitBox.BitBoxCallbac
             handler.postDelayed(this, 100);
         }
     };
+*/
 
 
 
-    @Override
+    /*@Override
     public void setUi(Music music) {
         mTxtMusicName.setText(music.getmNameMusic());
         mImgCover.setImageBitmap(BitmapFactory.decodeFile(music.getmAlbumPath()));
-    }
+    }*/
 
 }

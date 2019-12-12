@@ -16,20 +16,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +37,6 @@ import com.example.mediaplayer.model.Album;
 import com.example.mediaplayer.model.Artist;
 import com.example.mediaplayer.model.Music;
 import com.example.mediaplayer.model.TabState;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.util.List;
 
@@ -50,6 +47,8 @@ import static com.example.mediaplayer.BitBox.MY_PERMISSION_REQUEST;
  */
 public class MusicListFragment extends Fragment {
 
+    private static final String TAG = "MusicListFragment";
+
     public static final String ARG_TABSTATE = "tabstate";
     public static final int REQUEST_CODE_MUSIC_FRAGMENT = 0;
     public static final String TAG_MUSIC_DETAIL = "musicDetail";
@@ -59,6 +58,7 @@ public class MusicListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MultiAdapter mAdapter;
     private BitBox mBitBox;
+    private MusicCallBack mActivity;
 
     /*private SeekBar mseekbar;
     private ImageView mImgNext, mImgPreviouse, mImgRepeat, mShufel, mEqulizer, mImgCover;
@@ -80,7 +80,7 @@ public class MusicListFragment extends Fragment {
 
     boolean flag, shufel;
     private TabState mTabState;
-    private Callbacks mCallback;
+    private CallbacksMusicList mCallback;
 
     public static MusicListFragment newInstance(TabState state) {
 
@@ -100,6 +100,8 @@ public class MusicListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         mTabState = (TabState) getArguments().getSerializable(ARG_TABSTATE);
 
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -116,6 +118,7 @@ public class MusicListFragment extends Fragment {
         }
 
         mBitBox = BitBox.getInstanse(getContext());
+        mActivity = (MusicCallBack) getActivity();
     }
 
     public void showDialog(final String msg, final Context context, final String permission) {
@@ -135,6 +138,11 @@ public class MusicListFragment extends Fragment {
         alert.show();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: called");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,8 +162,8 @@ public class MusicListFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if (context instanceof Callbacks)
-            mCallback = (Callbacks) context;
+        if (context instanceof CallbacksMusicList)
+            mCallback = (CallbacksMusicList) context;
     }
 
     @Override
@@ -164,61 +172,7 @@ public class MusicListFragment extends Fragment {
         mCallback = null;
     }
 
-    /*private void initListener() {
-                mImgPause.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mBitBox.getmMediaplayer().isPlaying()){
-                            mBitBox.getmMediaplayer().pause();
-                            mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_play,null));
-                        }else {
-                            mBitBox.getmMediaplayer().start();
-                            mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_pause, null));
-                        }
-                    }
-                });
-
-                mImgNext.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                            mBitBox.next();
-                    }
-                });
-
-                mImgPreviouse.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mBitBox.previous();
-                    }
-                });
-
-                mImgRepeat.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (flag == true) {
-                            mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeatone, null));
-                            flag = false;
-                        }
-                        else if(flag == false) {
-                            mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeat, null));
-                            flag = true;
-                        }
-                    }
-                });
-
-                mShufel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (shufel == true){
-                            mShufel.setColorFilter(getContext().getResources().getColor(R.color.fadeWhite));
-                            shufel = false;
-                        }
-                    }
-                });
-            }
-        */
-    private void setAdapter() {
+       private void setAdapter() {
 
         if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
             if (mTabState == TabState.musics){
@@ -306,7 +260,8 @@ public class MusicListFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mCallback.clickMusicHolder(mTabState,music);
+//                    mCallback.clickMusicHolder(mTabState,music);
+                    mActivity.UiHandler(music);
 
                     /*if (mTabState == TabState.musics) {
                         behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -343,8 +298,13 @@ public class MusicListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (mTabState == TabState.albums){
-                        Intent intent = AlbumMusicActivity.newIntent(getActivity(),album.getAlbumId(), mTabState);
-                        startActivityForResult(intent, REQUEST_CODE_AlbumFargment);
+                        /*Intent intent = AlbumMusicActivity.newIntent(getActivity(),album.getAlbumId(), mTabState);
+                        startActivityForResult(intent, REQUEST_CODE_AlbumFargment);*/
+
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.pager_container, AlbumMusicFragment.newInstance(album.getAlbumId(), mTabState))
+                        .addToBackStack(AlbumMusicFragment.TAG)
+                        .commit();
 
                     }
                 }
@@ -373,8 +333,12 @@ public class MusicListFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     if (mTabState == TabState.singers){
-                        Intent intent = AlbumMusicActivity.newIntent(getActivity(), artist.get_id(), mTabState);
-                        startActivity(intent);
+                        /*Intent intent = AlbumMusicActivity.newIntent(getActivity(), artist.get_id(), mTabState);
+                        startActivity(intent);*/
+                        getActivity().getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.pager_container, AlbumMusicFragment.newInstance(album.getArtistId(), mTabState))
+                                .addToBackStack(AlbumMusicFragment.TAG)
+                                .commit();
                     }
                 }
             });
@@ -458,21 +422,9 @@ public class MusicListFragment extends Fragment {
 
 
 
-    public interface Callbacks {
+    public interface CallbacksMusicList {
         void clickMusicHolder(TabState mTabstate, Music music);
     }
-
-
-   /* private Runnable updateTime = new Runnable() {
-        @Override
-        public void run() {
-            int time = mBitBox.getmMediaplayer().getCurrentPosition();
-            mseekbar.setMax(mBitBox.getmMediaplayer().getDuration());
-            mseekbar.setProgress(time);
-
-            handler.postDelayed(this, 100);
-        }
-    };*/
 
 
 
