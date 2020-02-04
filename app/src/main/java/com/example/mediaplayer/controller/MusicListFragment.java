@@ -104,7 +104,6 @@ public class MusicListFragment extends Fragment {
 
 
         mTabState = (TabState) getArguments().getSerializable(ARG_TABSTATE);
-/*
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -116,13 +115,12 @@ public class MusicListFragment extends Fragment {
 
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        }*/
-        AndroidRuntimePermission();
+        }
+       // AndroidRuntimePermission();
         mBitBox = BitBox.getInstanse(getContext());
         mActivity = (MusicCallBack) getActivity();
 
     }
-/*
     public void showDialog(final String msg, final Context context, final String permission) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setCancelable(true);
@@ -138,7 +136,7 @@ public class MusicListFragment extends Fragment {
                 });
         AlertDialog alert = alertBuilder.create();
         alert.show();
-    }*/
+    }
 
     @Override
     public void onResume() {
@@ -391,7 +389,7 @@ public class MusicListFragment extends Fragment {
 
 
 
-    public void AndroidRuntimePermission() {
+   /* public void AndroidRuntimePermission() {
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
 
@@ -446,12 +444,12 @@ public class MusicListFragment extends Fragment {
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+*/
 
 
 
 
-
-  /*  @Override
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSION_REQUEST:
@@ -492,7 +490,6 @@ public class MusicListFragment extends Fragment {
             return true;
         }
     }
-*/
 
 
 }
