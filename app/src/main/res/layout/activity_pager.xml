@@ -6,33 +6,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".controller.PagerActivity"
-    android:id="@+id/pager_container"
     android:orientation="vertical"
     android:gravity="bottom"
     android:background="#0F0F0F">
 
-    <androidx.viewpager.widget.ViewPager
 
-        android:id="@+id/viewPager"
-        android:layout_width="wrap_content"
+    <FrameLayout
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:backgroundTint="#E53935">
+        android:layout_width="match_parent"
+        android:id="@+id/pager_container">
 
+        <androidx.viewpager.widget.ViewPager
+
+            android:id="@+id/viewPager"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:backgroundTint="#E53935">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#0F0F0F"
-            app:tabSelectedTextColor="#ffffff"
+            app:tabSelectedTextColor="#8E24AA"
             app:tabTextColor="#DACBCB">
 
         </com.google.android.material.tabs.TabLayout>
+        </androidx.viewpager.widget.ViewPager>
 
-
-    </androidx.viewpager.widget.ViewPager>
-
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/album_framelayout_sheet_behavior"
@@ -42,9 +45,6 @@
         android:background="#0F0F0F"
         app:behavior_hideable="true"
         app:behavior_peekHeight="80dp">
-
-
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/album_cons1"

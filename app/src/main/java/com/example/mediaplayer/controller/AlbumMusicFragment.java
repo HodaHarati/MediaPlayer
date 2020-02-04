@@ -45,21 +45,8 @@ public class AlbumMusicFragment extends Fragment {//implements BitBox.BitBoxCall
     private RecyclerView mAlbumRecycler;
     private AlbumMusicAdapter mAdapter;
     private List<Music> mlistMusic;
-
-//    private CallbacksAlbumMusic callbacksAlbumMusic;
     private BitBox mBitBox;
     private MusicCallBack mActivity;
-   /* private SeekBar mseekbar;
-    private ImageView mImgNext, mImgPreviouse, mImgRepeat, mShufel, mEqulizer, mImgCover, mImgPause;
-    private TextView mTxtMusicName;
-    private boolean flag = true, shufel;
-
-    private BottomSheetBehavior behavior;
-    FrameLayout mlayoutDetailMusic;
-    private Handler handler = new Handler();
-*/
-
-
 
     public static final String ARG_ID = "id";
 
@@ -73,11 +60,9 @@ public class AlbumMusicFragment extends Fragment {//implements BitBox.BitBoxCall
         return fragment;
     }
 
-
     public AlbumMusicFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,23 +80,7 @@ public class AlbumMusicFragment extends Fragment {//implements BitBox.BitBoxCall
 
         mAlbumRecycler = view.findViewById(R.id.album_recycler);
 
-        /*mTxtMusicName = view.findViewById(R.id.album_txt_musicName);
-        mEqulizer = view.findViewById(R.id.album_equlizer);
-        mImgCover = view.findViewById(R.id.album_cover);
-        mImgNext = view.findViewById(R.id.album_image_next);
-        mImgPreviouse = view.findViewById(R.id.album_image_previous);
-        mImgPause = view.findViewById(R.id.album_imageButton_pause);
-        mImgRepeat = view.findViewById(R.id.album_icon_repeat);
-        mShufel = view.findViewById(R.id.album_icon_shufel);
-        // mTextViewSongTitleBottemsheet = view.findViewById(R.id.textview_title_bottemsheet);
-        mlayoutDetailMusic = view.findViewById(R.id.album_framelayout_sheet_behavior);
-        behavior = BottomSheetBehavior.from(mlayoutDetailMusic);
-        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mseekbar = view.findViewById(R.id.album_seekbar);
-        handler.postDelayed(updateTime, 100);*/
-
         mBitBox = BitBox.getInstanse(getActivity());
-    //    mBitBox.setmCallback(this);
 
        // initListener();
         setAdapter();
@@ -141,94 +110,6 @@ public class AlbumMusicFragment extends Fragment {//implements BitBox.BitBoxCall
         mAdapter = new AlbumMusicAdapter(mlistMusic);
         mAlbumRecycler.setAdapter(mAdapter);
     }
-
-
-   /* private void initListener() {
-        mseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                if (fromUser)
-                    mBitBox.getmMediaplayer().seekTo(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-
-        mImgPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mBitBox.getmMediaplayer().isPlaying()){
-                    mBitBox.getmMediaplayer().pause();
-                    mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_play,null));
-                }else {
-                    mBitBox.getmMediaplayer().start();
-                    mImgPause.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_action_pause, null));
-                }
-            }
-        });
-
-        mImgNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBitBox.next(mlistMusic);
-                *//*if (flag == true && shufel == false)
-                    mBitBox.next(mlistMusic);
-                else if (flag == true && shufel == true)
-                    mBitBox.nextShufel(mlistMusic);
-                else if (flag == false && shufel == false)
-                    mBitBox.repeateOne();
-                else if (flag == false && shufel == true)
-                    mBitBox.repeateOne();*//*
-            }
-        });
-
-        mImgPreviouse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mBitBox.previous(mlistMusic);
-            }
-        });
-
-        mImgRepeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (flag == true) {
-                    mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeatone, null));
-                    flag = false;
-                }
-                else if(flag == false) {
-                    mImgRepeat.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_repeat, null));
-                    flag = true;
-                }
-            }
-        });
-
-        mShufel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (shufel == true){
-                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_shufel, null));
-                    shufel = false;
-                }
-                else if (shufel == false){
-                    mShufel.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_shufel_fade, null));
-                    shufel = true;
-                }
-            }
-        });
-    }
-
-*/
-
 
     private class AlbumMusicHolder extends RecyclerView.ViewHolder{
 
@@ -299,19 +180,6 @@ public class AlbumMusicFragment extends Fragment {//implements BitBox.BitBoxCall
     public interface CallbacksAlbumMusic {
         void clickMusicHolderAlbum( Music music);
     }
-
-/*
-    private Runnable updateTime = new Runnable() {
-        @Override
-        public void run() {
-            int time = mBitBox.getmMediaplayer().getCurrentPosition();
-            mseekbar.setMax(mBitBox.getmMediaplayer().getDuration());
-            mseekbar.setProgress(time);
-
-            handler.postDelayed(this, 100);
-        }
-    };
-*/
 
 
 

@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -103,7 +104,7 @@ public class MusicListFragment extends Fragment {
 
 
         mTabState = (TabState) getArguments().getSerializable(ARG_TABSTATE);
-
+/*
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -115,12 +116,13 @@ public class MusicListFragment extends Fragment {
 
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        }
-
+        }*/
+        AndroidRuntimePermission();
         mBitBox = BitBox.getInstanse(getContext());
         mActivity = (MusicCallBack) getActivity();
-    }
 
+    }
+/*
     public void showDialog(final String msg, final Context context, final String permission) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setCancelable(true);
@@ -136,7 +138,7 @@ public class MusicListFragment extends Fragment {
                 });
         AlertDialog alert = alertBuilder.create();
         alert.show();
-    }
+    }*/
 
     @Override
     public void onResume() {
@@ -174,7 +176,7 @@ public class MusicListFragment extends Fragment {
 
        private void setAdapter() {
 
-        if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+        //if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
             if (mTabState == TabState.musics){
                 mMediaPlayerList = mBitBox.getmMusic();
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -195,57 +197,20 @@ public class MusicListFragment extends Fragment {
                 //mAdapter.setMusicList(mMediaPlayerList);
                 mRecyclerView.setAdapter(mAdapter);
             }
-        }
+        //}
     }
 
 
     private void initView(View view) {
-        // mImgPlay = view.findViewById(R.id.imageButton_play);
         mTxtMusicName = view.findViewById(R.id.album_txt_musicName);
-        /*// mTxtArtistName = view.findViewById(R.id.txt_artistName);
-        mEqulizer = view.findViewById(R.id.album_equlizer);
-        mImgCover = view.findViewById(R.id.album_cover);
-        mImgNext = view.findViewById(R.id.album_image_next);
-        mImgPreviouse = view.findViewById(R.id.album_image_previous);
-        mImgPause = view.findViewById(R.id.album_imageButton_pause);
-        mImgRepeat = view.findViewById(R.id.album_icon_repeat);
-        mShufel = view.findViewById(R.id.album_icon_shufel);*/
-        // mTextViewSongTitleBottemsheet = view.findViewById(R.id.textview_title_bottemsheet);
         mRecyclerView = view.findViewById(R.id.album_recycler);
-     /*   mlayoutDetailMusic = view.findViewById(R.id.album_framelayout_sheet_behavior);
-        behavior = BottomSheetBehavior.from(mlayoutDetailMusic);
-        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        mseekbar = view.findViewById(R.id.album_seekbar);
-        handler.postDelayed(updateTime, 100);
-        mseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
-                if (fromUser)
-                    mBitBox.getmMediaplayer().seekTo(i);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-    */
     }
-
-
-
 
     private class MediaHolder extends RecyclerView.ViewHolder{
 
         private TextView mTextviewTitle;
         private TextView mTextview;
         private ImageView mImageCover;
-        //private View mView;
         private Music music;
 
 
@@ -254,8 +219,6 @@ public class MusicListFragment extends Fragment {
             mTextviewTitle = itemView.findViewById(R.id.textview_title);
             mTextview = itemView.findViewById(R.id.textview_singer);
             mImageCover = itemView.findViewById(R.id.img_music_cover);
-           // mView = itemView.findViewById(R.id.line);
-
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -336,7 +299,7 @@ public class MusicListFragment extends Fragment {
                         /*Intent intent = AlbumMusicActivity.newIntent(getActivity(), artist.get_id(), mTabState);
                         startActivity(intent);*/
                         getActivity().getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.pager_container, AlbumMusicFragment.newInstance(album.getArtistId(), mTabState))
+                                .replace(R.id.pager_container, AlbumMusicFragment.newInstance(artist.get_id(), mTabState))
                                 .addToBackStack(AlbumMusicFragment.TAG)
                                 .commit();
                     }
@@ -346,7 +309,7 @@ public class MusicListFragment extends Fragment {
         public void bindSinger (Artist artist){
             this.artist = artist;
             mTextSingerName.setText(artist.getmArtistName());
-            // mImgSinger.setImageBitmap(BitmapFactory.decodeFile());
+            mImgSinger.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.singer,null));
         }
     }
 
@@ -428,7 +391,67 @@ public class MusicListFragment extends Fragment {
 
 
 
+    public void AndroidRuntimePermission() {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+
+            if (ActivityCompat.checkSelfPermission(getContext(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                    AlertDialog.Builder alert_builder = new AlertDialog.Builder(getContext());
+                    alert_builder.setMessage("External Storage Permission is Required.");
+                    alert_builder.setTitle("Please Grant Permission.");
+                    alert_builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            ActivityCompat.requestPermissions(
+                                    getActivity(),
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    0
+                            );
+                        }
+                    });
+
+                    alert_builder.setNeutralButton("Cancel", null);
+                    AlertDialog dialog = alert_builder.create();
+                    dialog.show();
+
+                } else {
+
+                    ActivityCompat.requestPermissions(
+                            getActivity(),
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            0);
+                }
+            }
+        }
+    }
+
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 0:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(getActivity(), "permission Denied!", Toast.LENGTH_SHORT).show();
+                    AndroidRuntimePermission();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+
+
+
+
+  /*  @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSION_REQUEST:
@@ -444,8 +467,7 @@ public class MusicListFragment extends Fragment {
                         grantResults);
         }
     }
-    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
-            final Context context) {
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(final Context context) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context,
@@ -470,7 +492,7 @@ public class MusicListFragment extends Fragment {
             return true;
         }
     }
-
+*/
 
 
 }
