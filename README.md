@@ -3,5 +3,7 @@
 ![singer](https://user-images.githubusercontent.com/54942448/74101527-03b6cd00-4b50-11ea-93f9-a5236acaacca.PNG) 
 ![bottomshit](https://user-images.githubusercontent.com/54942448/74101582-90618b00-4b50-11ea-9d7b-a2c744196c44.PNG)
 
-This is a music player app. It shows all your musics, albums and singers in your mobile. A Bottom Shit pops up when a song is clicked and It contains next, previous, shuffle and repeat bottom and also has seek bar.
-The architecture used in this app is MVC. I use Activity, Fragment, Recycler view, Callbacks and bottomshit in this app. I've used Singletone Design Pattern for repository also I've used Factory design pattern for example newInstance in fragment.
+This is a music player app. It shows all your musics, albums and singers in the related tablaout. A bottom Sheet pops up when a song is clicked and It contains next, previous, shuffle and repeat button and also has seek bar.
+by click on each album or singer you could see related songs.
+
+The architecture used in this app is MVC. I use Activity, Fragment, Recycler view, Callbacks and bottomsheet in this app. I've used Singletone Design Pattern for repository also I've used Factory design pattern for example newInstance in fragment.
